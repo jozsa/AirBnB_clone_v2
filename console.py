@@ -34,6 +34,13 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         """Creates a new instance of BaseModel, saves it
+
+        Usage:
+            1) create <Class name>
+                This will create a class with auto-assigned attributes
+            2) create <Class name> <key name>=<value> <key name>=<value>
+                Can input any number of keys & values, attributes will
+                reflect the key/value pairs provided
         Exceptions:
             SyntaxError: No class name has been provided
             NameError: The class name doesn't exist
