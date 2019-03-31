@@ -12,6 +12,8 @@ class State(BaseModel, Base):
     Attributes:
         name: String, 128 characters
     """
+    __tablename__ = 'states'
+
     name = Column(String(128),
                   nullable=False)
 
