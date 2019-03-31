@@ -146,8 +146,9 @@ class HBNBCommand(cmd.Cmd):
         if not line:
             for key in objects:
                 my_list.append(objects[key])
+            if not my_list:
+                return
             print(my_list)
-            return
         try:
             args = line.split(" ")
             if args[0] not in self.all_classes:
@@ -156,6 +157,8 @@ class HBNBCommand(cmd.Cmd):
                 name = key.split('.')
                 if name[0] == args[0]:
                     my_list.append(objects[key])
+            if not my_list:
+                return
             print(my_list)
         except NameError:
             print("** class doesn't exist **")
