@@ -35,14 +35,30 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, line):
         """Creates a new instance of BaseModel, saves it
         Exceptions:
-            SyntaxError: when there is no args given
-            NameError: when there is no object taht has the name
+            SyntaxError: No class name has been provided
+            NameError: The class name doesn't exist
         """
         try:
             if not line:
                 raise SyntaxError()
-            my_list = line.split(" ")
-            obj = eval("{}()".format(my_list[0]))
+            args = line.split(" ")
+            obj = eval("{}()".format(args[0]))
+            for kvpair in args[1:]:
+                item = kvpair.split("=")
+                key = item[0]
+                value = item[1]
+                try:
+                    if value[0] == '"':
+                        value = value.strip('"') \
+                            .replace('\\', '') \
+                            .replace('_', ' ')
+                    elif '.' in value:
+                        value = float(value)
+                    else:
+                        value = int(value)
+                    obj.__dict__[key] = value
+                except Exception:
+                    continue
             obj.save()
             print("{}".format(obj.id))
         except SyntaxError:
