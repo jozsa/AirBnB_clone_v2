@@ -6,7 +6,7 @@ storage engine for AirBnB clone objects.
 
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import BaseModel, Base
 from models.amenity import Amenity
 from models.city import City
@@ -21,6 +21,8 @@ class DBStorage:
     """
     __engine = None
     __session = None
+    all_classes = ['City',
+                   'State']
 
     def __init__(self):
         """
@@ -42,8 +44,11 @@ class DBStorage:
                                               os.environ['HBNB_MYSQL_HOST'],
                                               os.environ['HBNB_MYSQL_DB']),
                                       pool_pre_ping=True)
-        if os.environ['HBNB_ENV'] == 'test':
-            Base.metadata.drop_all(self.__engine)
+        try:
+            if os.environ['HBNB_ENV'] == 'test':
+                Base.metadata.drop_all(self.__engine)
+        except KeyError:
+            pass
 
     def all(self, cls=None):
         """
@@ -55,13 +60,20 @@ class DBStorage:
         Returns a dictionary with all objects queried.
         """
         obj_dict = {}
-        all_objs = self.__session.query(cls).all() \
-            if cls else self.__session.query.all()
+        all_objs = []
+        if cls:
+            all_objs = self.__session.query(cls).all()
+        else:
+            for classname in self.all_classes:
+                try:
+                    all_objs += self.__session.query(classname).all()
+                except Exception:
+                    pass
         for obj in all_objs:
             obj_dict[obj.__class__.__name__ + '.' + obj.id] = obj
         return obj_dict
 
-    def new(self, obj)
+    def new(self, obj):
         """
         Adds obj to current database session
         """
