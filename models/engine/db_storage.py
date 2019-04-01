@@ -70,7 +70,8 @@ class DBStorage:
             all_objs = self.__session.query(eval(cls)).all()
         """TODO: ADD query all objects if no class is passed"""
         obj_dict = {obj.__class__.__name__ + '.' + obj.id: obj
-                    for obj in all_objs} """BUG: includes <sqlalchemy> object in dict"""
+                    for obj in all_objs} 
+        """BUG: includes <sqlalchemy> object in dict"""
         return obj_dict
 
     def new(self, obj):
