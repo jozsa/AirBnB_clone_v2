@@ -145,7 +145,7 @@ class HBNBCommand(cmd.Cmd):
         args = parse(line)
         if not args:
             store = storage.all()
-            print([str(v) for v in store.values()])
+            print([v for v in store.values()])
         elif args[0] in self.all_classes:
             store = storage.all(args[0])
             print([v for v in store.values()
