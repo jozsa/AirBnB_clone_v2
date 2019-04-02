@@ -21,13 +21,8 @@ class DBStorage:
     """
     __engine = None
     __session = None
-    all_classes = ['Amenity',
-                   'BaseModel',
-                   'City',
-                   'Place',
-                   'Review',
-                   'State',
-                   'User']
+    all_classes = ['City',
+                   'State']
 
     def __init__(self):
         """
@@ -68,7 +63,8 @@ class DBStorage:
         all_objs = []
         if cls:
             all_objs = self.__session.query(eval(cls)).all()
-        """TODO: ADD query all objects if no class is passed"""
+        for table in self.all_classes:
+            all_objs += self.__session.query(eval(table)).all()
         obj_dict = {obj.__class__.__name__ + '.' + obj.id: obj
                     for obj in all_objs}
         """BUG: includes <sqlalchemy> object in dict"""
