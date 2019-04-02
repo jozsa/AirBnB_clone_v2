@@ -91,6 +91,17 @@ class TestFileStorage(unittest.TestCase):
                 self.assertEqual(line, "{}")
         self.assertIs(self.storage.reload(), None)
 
+    def test_delete(self):
+        """
+        Tests if delete works
+        """
+        fs = FileStorage()
+        new_obj = User()
+        fs.new(new_obj)
+        fs.save()
+        self.assertIsNotNone(new_obj)
+        fs.delete(new_obj)
+        self.assertIsNone(new_obj)
 
 if __name__ == "__main__":
     unittest.main()
