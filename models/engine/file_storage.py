@@ -29,7 +29,7 @@ class FileStorage:
         obj_dict = {}
         if cls is not None:
             obj_dict = {key: value for key, value
-                        in self.__objects.items() if cls in key}
+                        in self.__objects.items() if str(cls) in key}
             return obj_dict
         else:
             return self.__objects
