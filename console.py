@@ -75,8 +75,12 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, line):
         """Prints the string representation of an instance
+
+        Usage:
+            `show <classname> <instanceid>`
+
         Exceptions:
-            SyntaxError: thrown when there is no arguments given
+            SyntaxError: thrown when no arguments are given
             NameError: thrown when class (1st argument) does not exist
             IndexError: thrown when instance id (2nd argument) is given
             KeyError: thrown when instance id (2nd argument) is invalid
@@ -106,11 +110,15 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, line):
         """Deletes an instance based on the class name and id
+
+        Usage:
+            `destroy <classname> <instanceid>`
+
         Exceptions:
-            SyntaxError: when there is no args given
-            NameError: when there is no object taht has the name
-            IndexError: when there is no id given
-            KeyError: when there is no valid id given
+            SyntaxError: thrown when no arguments are given
+            NameError: thrown when class (1st argument) does not exist
+            IndexError: thrown when instance id (2nd argument) is given
+            KeyError: thrown when instance id (2nd argument) is invalid
         """
         try:
             if not line:
