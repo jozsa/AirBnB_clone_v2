@@ -5,6 +5,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship, backref
 
+
 class State(BaseModel, Base):
     """
     This is the class for State objects.
@@ -27,4 +28,5 @@ class State(BaseModel, Base):
             """Property getter of list of city instances
             where state_id equals current State.id"""
             city_dict = storage.all(City)
-            return [city for city in city_dict.values() if city.state_id == self.id]
+            return [city for city in city_dict.values()
+                    if city.state_id == self.id]
