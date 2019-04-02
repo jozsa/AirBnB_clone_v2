@@ -76,10 +76,10 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, line):
         """Prints the string representation of an instance
         Exceptions:
-            SyntaxError: when there is no args given
-            NameError: when there is no object taht has the name
-            IndexError: when there is no id given
-            KeyError: when there is no valid id given
+            SyntaxError: thrown when there is no arguments given
+            NameError: thrown when class (1st argument) does not exist
+            IndexError: thrown when instance id (2nd argument) is given
+            KeyError: thrown when instance id (2nd argument) is invalid
         """
         try:
             if not line:
@@ -264,9 +264,11 @@ class HBNBCommand(cmd.Cmd):
         else:
             cmd.Cmd.default(self, line)
 
+
 def parse(line):
         """Convert a series of zero or more numbers to an argument list."""
         return shlex.split(line)
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
