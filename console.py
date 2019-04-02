@@ -10,15 +10,15 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
-from shlex import split
+import shlex
 
 
 class HBNBCommand(cmd.Cmd):
     """this class is entry point of the command interpreter
     """
     prompt = "(hbnb) "
-    all_classes = {"BaseModel", "User", "State", "City",
-                   "Amenity", "Place", "Review"}
+    all_classes = ["BaseModel", "User", "State", "City",
+                   "Amenity", "Place", "Review"]
 
     def emptyline(self):
         """Ignores empty spaces"""
@@ -75,11 +75,15 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, line):
         """Prints the string representation of an instance
+
+        Usage:
+            `show <classname> <instanceid>`
+
         Exceptions:
-            SyntaxError: when there is no args given
-            NameError: when there is no object taht has the name
-            IndexError: when there is no id given
-            KeyError: when there is no valid id given
+            SyntaxError: thrown when no arguments are given
+            NameError: thrown when class (1st argument) does not exist
+            IndexError: thrown when instance id (2nd argument) is given
+            KeyError: thrown when instance id (2nd argument) is invalid
         """
         try:
             if not line:
@@ -106,11 +110,15 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, line):
         """Deletes an instance based on the class name and id
+
+        Usage:
+            `destroy <classname> <instanceid>`
+
         Exceptions:
-            SyntaxError: when there is no args given
-            NameError: when there is no object taht has the name
-            IndexError: when there is no id given
-            KeyError: when there is no valid id given
+            SyntaxError: thrown when no arguments are given
+            NameError: thrown when class (1st argument) does not exist
+            IndexError: thrown when instance id (2nd argument) is given
+            KeyError: thrown when instance id (2nd argument) is invalid
         """
         try:
             if not line:
@@ -141,23 +149,16 @@ class HBNBCommand(cmd.Cmd):
         Exceptions:
             NameError: when there is no object taht has the name
         """
-        objects = storage.all()
-        my_list = []
-        if not line:
-            for key in objects:
-                my_list.append(objects[key])
-            print(my_list)
-            return
-        try:
-            args = line.split(" ")
-            if args[0] not in self.all_classes:
-                raise NameError()
-            for key in objects:
-                name = key.split('.')
-                if name[0] == args[0]:
-                    my_list.append(objects[key])
-            print(my_list)
-        except NameError:
+        all_items = []
+        args = parse(line)
+        if not args:
+            store = storage.all()
+            print([v for v in store.values()])
+        elif args[0] in self.all_classes:
+            store = storage.all(args[0])
+            print([v for v in store.values()
+                   if type(v).__name__ == args[0]])
+        else:
             print("** class doesn't exist **")
 
     def do_update(self, line):
@@ -270,6 +271,11 @@ class HBNBCommand(cmd.Cmd):
                     self.do_update(args)
         else:
             cmd.Cmd.default(self, line)
+
+
+def parse(line):
+        """Convert a series of zero or more numbers to an argument list."""
+        return shlex.split(line)
 
 
 if __name__ == '__main__':
