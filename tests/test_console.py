@@ -38,6 +38,10 @@ class TestConsole(unittest.TestCase):
             os.remove("file.json")
         except Exception:
             pass
+        try:
+            models.storage.delete(self)
+        except Exception:
+            pass
 
     def test_pep8_console(self):
         """Pep8 console.py"""
