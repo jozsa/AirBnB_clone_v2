@@ -79,7 +79,7 @@ class Place(BaseModel, Base):
             return [amenity for amenity in amenity_dict.values()
                     if amenity.id in self.amenity_ids]
 
-        @property.setter
+        @amenities.setter
         def amenities(self, amty):
             """Property setter that appends `amty`'s id
             to the current Place amenity_ids"""
