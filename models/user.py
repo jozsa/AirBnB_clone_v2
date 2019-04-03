@@ -32,3 +32,4 @@ class User(BaseModel, Base):
         if os.environ['HBNB_TYPE_STORAGE'] == 'db':
             # TODO implement the deletion requirement
             places = relationship('Place', backref='user')
+            reviews = relationship('Review', backref='user')
