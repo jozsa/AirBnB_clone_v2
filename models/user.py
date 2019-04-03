@@ -3,7 +3,7 @@
 import os
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
-# from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref
 
 
 class User(BaseModel, Base):
@@ -27,3 +27,7 @@ class User(BaseModel, Base):
                         nullable=True)
     last_name = Column(String(128),
                        nullable=True)
+
+    if 'HBNB_TYPE_STORAGE' in os.environ:
+        if os.environ['HBNB_TYPE_STORAGE'] == 'db':
+            places = relationship('Place', backref='user')
