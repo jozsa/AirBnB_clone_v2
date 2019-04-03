@@ -61,11 +61,28 @@ class Place(BaseModel, Base):
         if os.environ['HBNB_TYPE_STORAGE'] == 'db':
             # TODO implement the deletion requirement
             reviews = relationship('Review', backref='user')
+            amenities = relationship('Amenity', secondary='place_amenity', backref='place')
     else:
         @property
         def reviews(self):
-            """Property getter of list of review instances
+            """Property getter of list of Review instances
             where place_id equals current Place.id"""
             review_dict = storage.all(Review)
             return [review for review in review_dict.values()
                     if review.place_id == self.id]
+
+        @property
+        def amenities(self):
+            """Property getter of list of Amenity instances
+            where place_id equals current Place.id"""
+            amenity_dict = storage.all(Amenity)
+            return [amenity for amenity in amenity_dict.values()
+                    if amenity.id in amenity_ids]
+
+        @property.setter
+        def amenities(self, amty):
+            """Property setter that appends `amty`'s id 
+            to the the current Place amenity_ids"""
+            if isinstance(amty, Amenity):
+                # TODO should this be appended only if it's not already there?
+                self.amenity_ids.append(amty.id)
