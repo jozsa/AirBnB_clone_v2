@@ -12,10 +12,10 @@ class User(BaseModel, Base):
     It is associated with the SQL table 'users'.
 
     Attributes:
-        email: String, 128 characters
-        password: String, 128 characters
-        first_name: String, 128 characters
-        last_name: String, 128 characters
+        email: non-Null String, 128 characters
+        password: non-Null String, 128 characters
+        first_name: nullable String, 128 characters
+        last_name: nullable String, 128 characters
     """
     __tablename__ = 'users'
 
