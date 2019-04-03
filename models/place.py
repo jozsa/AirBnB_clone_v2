@@ -7,8 +7,13 @@ from sqlalchemy.orm import relationship, backref
 
 
 place_amenity = Table('place_amenity', Base.metadata,
-                      Column('place_id', String(60), ForeignKey('places.id'), primary_key=True, nullable=False),
-                      Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True, nullable=False))
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False))
+
 
 class Place(BaseModel, Base):
     """
@@ -61,7 +66,9 @@ class Place(BaseModel, Base):
         if os.environ['HBNB_TYPE_STORAGE'] == 'db':
             # TODO implement the deletion requirement
             reviews = relationship('Review', backref='user')
-            amenities = relationship('Amenity', secondary='place_amenity', backref='place')
+            amenities = relationship('Amenity',
+                                     secondary='place_amenity',
+                                     backref='place')
     else:
         @property
         def reviews(self):
