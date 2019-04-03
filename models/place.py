@@ -77,12 +77,11 @@ class Place(BaseModel, Base):
             where place_id equals current Place.id"""
             amenity_dict = storage.all(Amenity)
             return [amenity for amenity in amenity_dict.values()
-                    if amenity.id in amenity_ids]
+                    if amenity.id in self.amenity_ids]
 
         @property.setter
         def amenities(self, amty):
-            """Property setter that appends `amty`'s id 
-            to the the current Place amenity_ids"""
-            if isinstance(amty, Amenity):
-                # TODO should this be appended only if it's not already there?
+            """Property setter that appends `amty`'s id
+            to the current Place amenity_ids"""
+            if isinstance(amty, Amenity) and amty.id not in self.amenity_ids:
                 self.amenity_ids.append(amty.id)
