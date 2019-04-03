@@ -26,7 +26,7 @@ class DBStorage:
 
     def __init__(self):
         """
-        Instantation of DBStorage class.
+        Instantiation of DBStorage class.
 
         Creates engine and links it to MySQL database.
         Parameters for linking to MySQL database are
@@ -67,7 +67,7 @@ class DBStorage:
             all_objs += self.__session.query(eval(table)).all()
         obj_dict = {obj.__class__.__name__ + '.' + obj.id: obj
                     for obj in all_objs}
-        """BUG: includes <sqlalchemy> object in dict"""
+        # TODO BUG: includes <sqlalchemy> object in dict
         return obj_dict
 
     def new(self, obj):
