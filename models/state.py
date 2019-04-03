@@ -21,7 +21,7 @@ class State(BaseModel, Base):
 
     if 'HBNB_TYPE_STORAGE' in os.environ:
         if os.environ['HBNB_TYPE_STORAGE'] == 'db':
-            cities = relationship('City', backref='state')
+            cities = relationship('City', cascade="delete-orphan", backref='state')
     else:
         @property
         def cities(self):
