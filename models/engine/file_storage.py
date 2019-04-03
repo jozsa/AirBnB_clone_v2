@@ -71,5 +71,6 @@ class FileStorage:
         """
         try:
             del self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)]
+        # TODO get rid of this anti-pattern below
         except Exception:
             pass
