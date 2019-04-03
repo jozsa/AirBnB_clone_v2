@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """This is the place class"""
-# import os
+import os
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
-# from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref
 
 
 class Place(BaseModel, Base):
@@ -52,3 +52,16 @@ class Place(BaseModel, Base):
     longitude = Column(Float,
                        nullable=True)
     amenity_ids = []
+
+    if 'HBNB_TYPE_STORAGE' in os.environ:
+        if os.environ['HBNB_TYPE_STORAGE'] == 'db':
+            # TODO implement the deletion requirement
+            reviews = relationship('Review', backref='user')
+    else:
+        @property
+        def reviews(self):
+            """Property getter of list of review instances
+            where place_id equals current Place.id"""
+            review_dict = storage.all(Review)
+            return [review for review in review_dict.values()
+                    if review.place_id == self.id]
