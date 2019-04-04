@@ -16,7 +16,8 @@ class BaseModel:
     """
 
     id = Column(String(60),
-                primary_key=True)
+                primary_key=True,
+                nullable=False)
     created_at = Column(DateTime,
                         default=datetime.utcnow())
     updated_at = Column(DateTime,
@@ -32,6 +33,7 @@ class BaseModel:
             created_at: creation date
             updated_at: updated date
         """
+        self.id = str(uuid.uuid4())
         if kwargs:
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
@@ -39,7 +41,6 @@ class BaseModel:
                 if key != "__class__":
                     setattr(self, key, value)
         else:
-            self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
 
     def __str__(self):
