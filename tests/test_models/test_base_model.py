@@ -12,6 +12,9 @@ class TestBaseModel(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """setup for the test"""
+        cls.skipTest('HBNB_TYPE_STORAGE' in os.environ and \
+                     os.environ['HBNB_TYPE_STORAGE'] == 'db',
+                     "This class doesn't work with DBStorage")
         cls.base = BaseModel()
         cls.base.name = "Kev"
         cls.base.num = 20

@@ -36,24 +36,22 @@ class TestConsole(unittest.TestCase):
                                            db=os.environ['HBNB_MYSQL_DB'])
                 cls.cur = cls.conn.cursor()
                 cls.storage = DBStorage()
-                cls.storage.reload()
         else:
             cls.storage = FileStorage()
-            cls.storage.reload()
 
     @classmethod
     def teardown(cls):
         """at the end of the test this will tear it down"""
         del cls.consol
 
+    def setUp(self):
+        """ """
+        self.storage.reload()
+
     def tearDown(self):
         """Remove temporary file (file.json) created as a result"""
         try:
             os.remove("file.json")
-        except Exception:
-            pass
-        try:
-            models.storage.delete(self)
         except Exception:
             pass
 
@@ -123,14 +121,11 @@ class TestConsole(unittest.TestCase):
                      "Syntax doesn't work with FileStorage")
     def test_create_db(self):
         with patch('sys.stdout', new=StringIO()) as f:
-            self.cur.execute("SELECT * FROM states")
-            states = self.cur.fetchall()
+            states = self.cur.execute("SELECT * FROM states")
             self.consol.onecmd('create State name="Maryland"')
-            self.consol.onecmd('show State {}'.format(f.getvalue()))
-            self.assertEqual('lol', f.getvalue())
-            self.cur.execute("SELECT * FROM states")
-            newstates = self.cur.fetchall()
-            self.assertNotEqual(states, newstates)
+            self.conn.commit()
+            newstates = self.cur.execute("SELECT * FROM states")
+            self.assertEqual(newstates, states + 1)
 
     def test_show(self):
         """Test show command input"""
@@ -216,6 +211,11 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("asdfsdfsd.all()")
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
+
+    @unittest.skipIf('HBNB_TYPE_STORAGE' in os.environ and
+                     os.environ['HBNB_TYPE_STORAGE'] == 'db',
+                     "Syntax doesn't work with db storage")
+    def test_state_all(self):
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("State.all()")
             self.assertEqual("[]\n", f.getvalue())
