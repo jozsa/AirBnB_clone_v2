@@ -20,6 +20,7 @@ from models.engine.file_storage import FileStorage
 from models.engine.db_storage import DBStorage
 import MySQLdb
 
+
 class TestConsole(unittest.TestCase):
     """this will test the console"""
 
@@ -27,21 +28,23 @@ class TestConsole(unittest.TestCase):
     def setUpClass(cls):
         """setup for the test"""
         cls.consol = HBNBCommand()
-        cls.conn = MySQLdb.connect(host=os.environ['HBNB_MYSQL_HOST'],
-                                    user=os.environ['HBNB_MYSQL_USER'],
-                                    passwd=os.environ['HBNB_MYSQL_PWD'],
-                                    db=os.environ['HBNB_MYSQL_DB'])
-        cls.cur = cls.conn.cursor()
-        cls.storage = DBStorage()
-        cls.storage.reload()
+        if "HBNB_TYPE_STORAGE" in os.environ:
+            if os.environ['HBNB_TYPE_STORAGE'] == 'db':
+                cls.conn = MySQLdb.connect(host=os.environ['HBNB_MYSQL_HOST'],
+                                           user=os.environ['HBNB_MYSQL_USER'],
+                                           passwd=os.environ['HBNB_MYSQL_PWD'],
+                                           db=os.environ['HBNB_MYSQL_DB'])
+                cls.cur = cls.conn.cursor()
+                cls.storage = DBStorage()
+                cls.storage.reload()
+        else:
+            cls.storage = FileStorage()
+            cls.storage.reload()
 
     @classmethod
     def teardown(cls):
         """at the end of the test this will tear it down"""
         del cls.consol
-
-    def setUp(self):
-        """ Connect to MySQL database for testing"""
 
     def tearDown(self):
         """Remove temporary file (file.json) created as a result"""
@@ -97,15 +100,17 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("create asdfsfsd")
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
-        """
+
+    @unittest.skipIf('HBNB_TYPE_STORAGE' in os.environ and
+                     os.environ['HBNB_TYPE_STORAGE'] == 'db',
+                     "Attributes of User can't be null in db")
+    def test_create_filestorage(self):
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("create User")
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("all User")
             self.assertEqual(
                 "[[User]", f.getvalue()[:7])
-        """
-        """
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd('create User nickname="aj" age=27 weight=200.5')
             obj_id = f.getvalue()
@@ -113,12 +118,19 @@ class TestConsole(unittest.TestCase):
             self.assertTrue('nickname' in f.getvalue())
             self.assertTrue('age' in f.getvalue())
             self.assertTrue('weight' in f.getvalue())
-        """
+
+    @unittest.skipIf('HBNB_TYPE_STORAGE' not in os.environ,
+                     "Syntax doesn't work with FileStorage")
+    def test_create_db(self):
         with patch('sys.stdout', new=StringIO()) as f:
-            old_state_number = self.cur.execute("SELECT * FROM states")
+            self.cur.execute("SELECT * FROM states")
+            states = self.cur.fetchall()
             self.consol.onecmd('create State name="Maryland"')
-            new_state_number = self.cur.execute("SELECT * FROM states")
-            self.assertEqual(new_state_number, old_state_number + 1)
+            self.consol.onecmd('show State {}'.format(f.getvalue()))
+            self.assertEqual('lol', f.getvalue())
+            self.cur.execute("SELECT * FROM states")
+            newstates = self.cur.fetchall()
+            self.assertNotEqual(states, newstates)
 
     def test_show(self):
         """Test show command input"""
@@ -134,12 +146,10 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("show BaseModel")
             self.assertEqual(
                 "** instance id missing **\n", f.getvalue())
-        """
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("show BaseModel abcd-123")
             self.assertEqual(
                 "** no instance found **\n", f.getvalue())
-        """
 
     def test_destroy(self):
         """Test destroy command input"""
@@ -206,11 +216,9 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("asdfsdfsd.all()")
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
-        """
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("State.all()")
             self.assertEqual("[]\n", f.getvalue())
-        """
 
     def test_z_count(self):
         """Test count command input"""
@@ -218,11 +226,6 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("asdfsdfsd.count()")
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
-        """
-        with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd("State.count()")
-            self.assertEqual("0\n", f.getvalue())
-        """
 
     def test_z_show(self):
         """Test alternate show command input"""
@@ -230,12 +233,10 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("safdsa.show()")
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
-        """
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("BaseModel.show(abcd-123)")
             self.assertEqual(
                 "** no instance found **\n", f.getvalue())
-        """
 
     def test_destroy(self):
         """Test alternate destroy command input"""
@@ -243,12 +244,10 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("Galaxy.destroy()")
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
-        """
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("User.destroy(12345)")
             self.assertEqual(
                 "** no instance found **\n", f.getvalue())
-        """
 
     def test_update(self):
         """Test alternate destroy command input"""
@@ -256,26 +255,11 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("sldkfjsl.update()")
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
-        """
-        with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd("User.update(12345)")
-            self.assertEqual(
-                "** no instance found **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("all User")
             obj = f.getvalue()
         my_id = obj[obj.find('(')+1:obj.find(')')]
-        with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd("User.update(" + my_id + ")")
-            self.assertEqual(
-                "** attribute name missing **\n", f.getvalue())
-        """
-        """
-        with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd("User.update(" + my_id + ", name)")
-            self.assertEqual(
-                "** value missing **\n", f.getvalue())
-        """
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """This is the review class"""
-import os
+# import os
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, String, ForeignKey
+# from sqlalchemy.orm import relationship, backref
 
 
-class Review(BaseModel):
+class Review(BaseModel, Base):
     """
     This is the class for Review objects.
     It is associated with the SQL table 'reviews'.

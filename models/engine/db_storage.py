@@ -21,8 +21,12 @@ class DBStorage:
     """
     __engine = None
     __session = None
-    all_classes = ['City',
-                   'State']
+    all_classes = ['Amenity',
+                   'City',
+                   'Place',
+                   'Review',
+                   'State',
+                   'User']
 
     def __init__(self):
         """
@@ -63,8 +67,9 @@ class DBStorage:
         all_objs = []
         if cls:
             all_objs = self.__session.query(eval(cls)).all()
-        for table in self.all_classes:
-            all_objs += self.__session.query(eval(table)).all()
+        else:
+            for table in self.all_classes:
+                all_objs += self.__session.query(eval(table)).all()
         obj_dict = {obj.__class__.__name__ + '.' + obj.id: obj
                     for obj in all_objs}
         # TODO BUG: includes <sqlalchemy> object in dict

@@ -66,11 +66,5 @@ class FileStorage:
     def delete(self, obj=None):
         """
         Delete obj from __objects if obj in __objects.
-
-        NameError: obj doesn't exist
         """
-        try:
-            del self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)]
-        # TODO get rid of this anti-pattern below
-        except Exception:
-            pass
+        del self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)]
