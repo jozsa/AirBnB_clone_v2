@@ -28,4 +28,6 @@ class City(BaseModel, Base):
     if 'HBNB_TYPE_STORAGE' in os.environ:
         if os.environ['HBNB_TYPE_STORAGE'] == 'db':
             # TODO implement the deletion requirement
-            places = relationship('Place', backref='cities')
+            places = relationship('Place',
+                                  cascade='delete, delete-orphan',
+                                  backref='cities')
