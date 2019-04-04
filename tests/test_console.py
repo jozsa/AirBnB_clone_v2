@@ -260,5 +260,6 @@ class TestConsole(unittest.TestCase):
             obj = f.getvalue()
         my_id = obj[obj.find('(')+1:obj.find(')')]
 
+
 if __name__ == "__main__":
     unittest.main()
