@@ -37,6 +37,10 @@ class TestFileStorage(unittest.TestCase):
             os.remove("file.json")
         except Exception:
             pass
+        try:
+            models.storage.delete(self)
+        except Exception:
+            pass
 
     def test_pep8_FileStorage(self):
         """Tests pep8 style"""
@@ -101,7 +105,8 @@ class TestFileStorage(unittest.TestCase):
         fs.save()
         self.assertIsNotNone(new_obj)
         fs.delete(new_obj)
-        self.assertIsNone(new_obj)
+        all_users = fs.all(User)
+        self.assertEqual(len(all_users.keys()), 0)
 
 if __name__ == "__main__":
     unittest.main()
