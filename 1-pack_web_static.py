@@ -23,6 +23,6 @@ def do_pack():
         exitstatus = local("tar -cpvf versions/web_static{}.tgz \
                            web_static".format(filename))
         if exitstatus.return_code == 0:
-            return filename
+            return "versions/web_static{filename}.tgz"
         else:
             return None
