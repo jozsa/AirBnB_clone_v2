@@ -18,10 +18,10 @@ def do_pack():
     """
     local("mkdir -p versions")
     now = datetime.now()
-    filename = "versions/web_static_{}.tgz".format(now.strftime('%Y%m%d%H%M%S'))
-    with settings(warn_only=True):
-        exitstatus = local("tar -cpvf {} web_static".format(filename))
-        if exitstatus.return_code == 0:
-            return filename
-        else:
-            return None
+    filename = "versions/web_static_{}.tgz" \
+        .format(now.strftime('%Y%m%d%H%M%S'))
+    pack = local("tar -cvzf {} web_static".format(filename))
+    if pack.stderr:
+        return None
+    else:
+        return filename
