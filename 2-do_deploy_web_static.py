@@ -33,7 +33,8 @@ def do_deploy(archive_path):
     deletetmp = run("rm /tmp/{}".format(filename))
     if deletetmp.failed:
         return False
-    move = run("mv /data/web_static/releases/{}/web_static/* /data/web_static/releases/{}/"
+    move = run("mv /data/web_static/releases/{}/web_static/* \
+               /data/web_static/releases/{}/"
                .format(filename[:-4], filename[:-4]))
     if move.failed:
         return False
