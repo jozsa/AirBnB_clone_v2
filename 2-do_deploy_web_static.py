@@ -21,6 +21,7 @@ def do_deploy(archive_path):
     if upload.failed:
         return False
     filename = archive_path.partition('/')[-1]
+    run("rm -rf /data/web_static/releases/{}".format(filename[:-4]))
     createdir = run("mkdir -p /data/web_static/releases/{}/"
                     .format(filename[:-4]))
     if createdir.failed:
