@@ -4,6 +4,7 @@
 One function: Compresses/archives a folder
 and stores it in another folder.
 """
+import os.path
 from fabric.api import *
 from datetime import datetime
 
@@ -15,6 +16,8 @@ def do_deploy(archive_path):
     """
     Distributes an archive to my web servers
     """
+    if not os.path.exists(archive_path):
+        return False
     upload = put("{}".format(archive_path), "/tmp/")
     if upload.failed:
         return False
