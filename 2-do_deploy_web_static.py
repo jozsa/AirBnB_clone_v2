@@ -1,8 +1,7 @@
 #!/usr/bin/python3
-"""do_pack()
+"""do_deploy()
 
-One function: Compresses/archives a folder
-and stores it in another folder.
+Deploys the archived path/file to server
 """
 import os.path
 from fabric.api import *
@@ -14,7 +13,7 @@ env.hosts = ['35.196.140.92',
 
 def do_deploy(archive_path):
     """
-    Distributes an archive to my web servers
+    Deploy archive_path to server
     """
     if not os.path.exists(archive_path):
         return False
