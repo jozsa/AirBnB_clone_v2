@@ -15,13 +15,15 @@ def do_deploy(archive_path):
     """
     Distributes an archive to my web servers
     """
-    put("{}".format(archive_path), "/tmp/")
+    upload = put("{}".format(archive_path), "/tmp/")
+    if upload.failed:
+        return False
     filename = archive_path.partition('/')[2]
-    createdir = run("mkdir -p /data/web_static/releases/{}"
+    createdir = run("mkdir -p /data/web_static/releases/{}/"
                     .format(filename[:-4]))
     if createdir.failed:
         return False
-    extract = run("tar -xzf /tmp/{} -C /data/web_static/releases/{}"
+    extract = run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
                   .format(filename, filename[:-4]))
     if extract.failed:
         return False
