@@ -33,9 +33,9 @@ def do_deploy(archive_path):
     deletetmp = run("rm /tmp/{}".format(filename))
     if deletetmp.failed:
         return False
-    move = run("mv -n /data/web_static/releases/{}/web_static/* \
-               /data/web_static/releases/{}/"
-               .format(filename[:-4], filename[:-4]))
+    with cd("/data/web_static/releases/"):
+        move = run("mv -n {}/web_static/* {}/"
+                   .format(filename[:-4], filename[:-4]))
     if move.failed:
         return False
     deleteweb = run("rm -rf /data/web_static/releases/{}/web_static"
@@ -45,9 +45,9 @@ def do_deploy(archive_path):
     deletecurrent = run("rm -rf /data/web_static/current")
     if deletecurrent.failed:
         return False
-    symlink = run("ln -s /data/web_static/releases/{}/ \
-                  /data/web_static/current"
-                  .format(filename[:-4]))
+    symlink = run(
+        "ln -s /data/web_static/releases/{}/ /data/web_static/current"
+        .format(filename[:-4]))
     if symlink.failed:
         return False
     return True
