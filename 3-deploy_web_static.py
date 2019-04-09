@@ -10,9 +10,6 @@ from datetime import datetime
 do_pack = __import__('1-pack_web_static').do_pack
 do_deploy = __import__('2-do_deploy_web_static').do_deploy
 
-env.hosts = ['35.196.140.92',
-             '35.237.19.12']
-
 
 def deploy():
     """
@@ -21,7 +18,7 @@ def deploy():
     on the result of do_deploy()
     """
     archive_path = do_pack()
-    if not archive_path:
+    if archive_path is None:
         return False
     result = do_deploy(archive_path)
     return result
