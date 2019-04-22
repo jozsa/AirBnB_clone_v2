@@ -1,9 +1,10 @@
-from flask import Flask
+#!/usr/bin/python3
 """
 One function: Returns "Hello HBNB!" to
 anyone submitting a GET request to '/'
 on my app
 """
+from flask import Flask
 app = Flask(__name__)
 
 

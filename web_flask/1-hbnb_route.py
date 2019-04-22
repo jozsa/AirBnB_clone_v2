@@ -1,8 +1,9 @@
-from flask import Flask
+#!/usr/bin/python3
 """
 Defines rules for people accessing
 various parts of my web app.
 """
+from flask import Flask
 app = Flask(__name__)
 
 

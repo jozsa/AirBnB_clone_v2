@@ -1,8 +1,9 @@
-from flask import Flask
+#!/usr/bin/python3
 """
 Defines return values for people requesting
 various parts of my web app
 """
+from flask import Flask
 app = Flask(__name__)
 
 
@@ -28,8 +29,8 @@ def c_text(text):
     return 'C {}'.format(text)
 
 
-@app.route('/python/', strict_slashes=False)
-@app.route('/python/<text>/', strict_slashes=False)
+@app.route('/python', strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
 def python_text(text='is cool'):
     """Returns 'Python' followed by the value
     of the text variable. If nothing is passed,
