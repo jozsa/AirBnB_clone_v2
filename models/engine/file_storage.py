@@ -68,3 +68,9 @@ class FileStorage:
         Delete obj from __objects if obj in __objects.
         """
         del self.__objects["{}.{}".format(obj.__class__.__name__, obj.id)]
+
+    def close(self):
+        """
+        Call reload() method to deserialize JSON file to objects
+        """
+        self.reload()
