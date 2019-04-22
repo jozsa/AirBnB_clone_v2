@@ -1,8 +1,7 @@
 from flask import Flask
 """
-One function: Returns "Hello HBNB!" to
-anyone submitting a GET request to '/'
-on my app
+Defines rules for users attempting
+to access various parts of my web app.
 """
 app = Flask(__name__)
 
@@ -13,11 +12,13 @@ def hello():
     a GET request to my app"""
     return 'Hello HBNB!'
 
+
 @app.route('/hbnb', strict_slashes=False)
 def hello_hbnb():
     """Returns "HBNB" to anyone who submits a
     GET request to my web server at /hbnb"""
     return 'HBNB'
+
 
 @app.route('/c/<text>', strict_slashes=False)
 def c_text(text):
