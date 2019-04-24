@@ -39,25 +39,17 @@ def python_text(text='is cool'):
     return 'Python {}'.format(text)
 
 
-@app.route('/number/<n>', strict_slashes=False)
+@app.route('/number/<int:n>', strict_slashes=False)
 def number_n(n):
     """Returns <n> is a number only if a number is typed
     into the URL"""
-    try:
-        int(n)
-        return '{} is a number'.format(n)
-    except ValueError:
-        abort(404)
+    return '{} is a number'.format(n)
 
 
-@app.route('/number_template/<n>', strict_slashes=False)
+@app.route('/number_template/<int:n>', strict_slashes=False)
 def number_template_n(n):
     """Displays a HTML page only if n is an integer"""
-    try:
-        int(n)
-        return render_template('5-number.html', n=n)
-    except ValueError:
-        abort(404)
+    return render_template('5-number.html', n=n)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
