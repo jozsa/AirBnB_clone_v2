@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This is the city class"""
 import os
+import models
 from models.base_model import BaseModel, Base
 import models.state
 from sqlalchemy import Column, String, ForeignKey
@@ -20,7 +21,7 @@ class City(BaseModel, Base):
     # TODO verify this syntax for ForeignKey
     # https://docs.sqlalchemy.org/en/latest/orm/examples.html#writing-your-own-suites
     state_id = Column(String(60),
-                      ForeignKey("state.id"),
+                      ForeignKey("states.id"),
                       nullable=False)
     name = Column(String(128),
                   nullable=False)
