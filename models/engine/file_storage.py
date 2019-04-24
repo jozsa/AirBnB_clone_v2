@@ -2,13 +2,12 @@
 """This is the file storage class for AirBnB"""
 import json
 from models.base_model import BaseModel
-from models.user import User
-from models.state import State
 from models.city import City
+from models.state import State
 from models.amenity import Amenity
+from models.user import User
 from models.place import Place
 from models.review import Review
-
 
 class FileStorage:
     """This class serializes instances to a JSON file and
@@ -29,7 +28,7 @@ class FileStorage:
         obj_dict = {}
         if cls is not None:
             obj_dict = {key: value for key, value
-                        in self.__objects.items() if str(cls) in key}
+                        in self.__objects.items() if cls.__name__ in key}
             return obj_dict
         else:
             return self.__objects
