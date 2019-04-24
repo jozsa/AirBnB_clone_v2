@@ -2,7 +2,7 @@
 """This is the city class"""
 import os
 from models.base_model import BaseModel, Base
-from models.state import State
+import models.state
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
@@ -20,7 +20,7 @@ class City(BaseModel, Base):
     # TODO verify this syntax for ForeignKey
     # https://docs.sqlalchemy.org/en/latest/orm/examples.html#writing-your-own-suites
     state_id = Column(String(60),
-                      ForeignKey(State.id),
+                      ForeignKey("state.id"),
                       nullable=False)
     name = Column(String(128),
                   nullable=False)
